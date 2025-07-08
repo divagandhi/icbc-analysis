@@ -2,8 +2,8 @@
 The goal of my project is to predict the risk of luxury cars needing to claim insurance based on their location, using real-world ICBC data\
 
 
-# Tools/languages used during the Data ETL (Extraction, Transformation, Loading) Process:\
-Tableau Public - ICBC data hosted on here (Extract)
+# Tools/languages used during the Data ETL (Extraction, Transformation, Loading) Process:
+Tableau Public - ICBC data hosted on here (Extract)\
 Tabula - Software used to convert a PDF dataset into a CSV file (Extract)\
 SQL - Language used to write queries (Transforming/Cleaning data)\
 MySQL - Software used to write queries (Transforming/Cleaning data)\
