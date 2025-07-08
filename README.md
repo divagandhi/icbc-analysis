@@ -1,5 +1,5 @@
 # ICBC-Analysis Project Goal
-The goal of my project is to predict the risk of luxury cars needing to claim insurance based on their location, using real-world ICBC data\
+The goal of my project is to predict the risk of luxury cars needing to claim insurance based on their location, using real-world ICBC data
 
 
 # Tools/languages used during the Data ETL (Extraction, Transformation, Loading) Process:
