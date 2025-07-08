@@ -9,6 +9,6 @@ Tools/languages used during the Data ETL (Extraction, Transformation, Loading) P
     MySQL - Software used to write queries (Transforming/Cleaning data)
     Excel - Software used to clean and organize data from ICBC before uploading onto MySQL (Transform)
     Microsoft PowerBI - Software used to upload transformed data from MySQL to visualize results (Load)
-#Written Report (Coming Soon)
+# Written Report (Coming Soon)
 Once the data is fully analyzed, I will be creating a written report of my conclusion
     Will include limitations, points of difficulty, thought processes, potential future applications
