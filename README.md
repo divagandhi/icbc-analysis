@@ -1,4 +1,4 @@
-# ICBC-Analysis
+# ICBC-Analysis Project Goal
 The goal of my project is to predict the risk of luxury cars needing to claim insurance based on their location, using real-world ICBC data\
 
 
