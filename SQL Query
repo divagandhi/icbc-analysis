@@ -123,4 +123,20 @@ ALTER TABLE 2022_2024_lvcount
 ADD COLUMN `Exposure Score` FLOAT;
 
 UPDATE 2022_2024_lvcount AS lvc
-SET `Exposure Score` = (`Luxury Car Rate %`* `Total % Crash Rate`);
+JOIN (
+  SELECT ac.YEAR,
+  SUM(ac.CRIME_COUNT) AS `Total Crimes`
+  FROM `auto crime - lower mainland 2022-2024` AS ac
+  GROUP BY ac.YEAR
+) AS crime
+ON lvc.`Vehicle Count Year` = crime.YEAR
+JOIN (
+  SELECT `Vehicle Count Year`, COUNT(*) AS `Total Cars in Lower Mainland`
+  FROM `2022_2024_vehicles` AS v
+  GROUP BY v.`Vehicle Count Year`
+) AS cars
+ON lvc.`Vehicle Count Year` = cars.`Vehicle Count Year`
+SET lvc.`Total Cars Auto Crime Rate %` = (crime.`Total Crimes`)/(cars.`Total Cars in Lower Mainland`)*100;
+
+UPDATE 2022_2024_lvcount AS lvc
+SET `Exposure Score` = (`Luxury Car Rate %`* (`Total Cars Crash Rate %` + `Total Cars Auto Crime Rate %`));
