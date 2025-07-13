@@ -67,3 +67,60 @@ INSERT INTO 2022_2024_vehicles SELECT * FROM vehicles_2023 LIMIT 1000000;
 INSERT INTO 2022_2024_vehicles SELECT * FROM vehicles_2022 LIMIT 1000000;
 
 CREATE TABLE 2022_2024_luxury_vehicles LIKE 2022_2024_vehicles;
+
+INSERT INTO 2022_2024_luxury_vehicles
+SELECT v.* FROM 2022_2024_vehicles as v
+INNER JOIN luxury_vehicles as lv
+  ON v.Make = lv.Make
+  AND v.Model = lv.Model
+  AND v.Model Year >= lv.Min Year
+  AND (lv.Max Year = 0 OR v.Model Year <= lv.Max Year)
+  AND (lv.Exclude = 0 OR v.Model Year != lv.Exclude);
+
+CREATE TABLE 2022_2024_lvcount (
+  City VARCHAR(50),
+  `Luxury Car Count` INT(10),
+  `Vehicle Count Year` INT);
+INSERT INTO 2022_2024_lvcount (City, `Luxury Car Count`, `Vehicle Count Year`)
+SELECT City, COUNT(*) AS `Luxury Car Count`, `Vehicle Count Year`
+FROM 2022_2024_luxury_vehicles
+GROUP BY City, `Vehicle Count Year`;
+
+ALTER TABLE 2022_2024_lvcount
+ADD COLUMN `Crash Count` INT;
+
+UPDATE 2022_2024_lvcount as lvc
+JOIN `lower mainland crashes (2022-2024)` as crash
+	ON lvc.city = crash.`ï»¿Crash Breakdown 2`
+    AND lvc.`Vehicle Count Year` = crash.`Date of Loss Year`
+SET lvc.`Crash Count` = crash.`Total Crashes`;
+
+ALTER TABLE 2022_2024_lvcount
+ADD COLUMN `Total Cars` INT;
+
+UPDATE 2022_2024_lvcount AS lvc
+JOIN (
+    SELECT City, `Vehicle Count Year`, COUNT(*) AS `Total Cars`
+    FROM 2022_2024_vehicles
+    GROUP BY City, `Vehicle Count Year`
+) AS vc
+ON lvc.City = vc.City AND lvc.`Vehicle Count Year` = vc.`Vehicle Count Year`
+SET lvc.`Total Cars` = vc.`Total Cars`;
+
+ALTER TABLE 2022_2024_lvcount
+ADD COLUMN `Total % Crash Rate` FLOAT;
+
+UPDATE 2022_2024_lvcount AS lvc
+SET `Total % Crash Rate` = `Crash Count`/`Total Cars`;
+
+ALTER TABLE 2022_2024_lvcount
+ADD COLUMN `Luxury Car Rate %` FLOAT;
+
+UPDATE 2022_2024_lvcount AS lvc
+SET `Luxury Car Rate %` = (`Luxury Car Count`/`Total Cars`) * 100;
+
+ALTER TABLE 2022_2024_lvcount
+ADD COLUMN `Exposure Score` FLOAT;
+
+UPDATE 2022_2024_lvcount AS lvc
+SET `Exposure Score` = (`Luxury Car Rate %`* `Total % Crash Rate`);
